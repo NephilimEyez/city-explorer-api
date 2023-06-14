@@ -27,21 +27,28 @@ app.get('/weather', (request, response, next) => {
         let lon = request.query.lon;
         let searchQuery = request.query.searchQuery;
 
-        searchCheck = () => {
-            if(data.find(searchQuery)) {
-                let myResponse = data.find(searchQuery);
-                response.status(200).send(myResponse);
-            } else {
-                response.status(404).send('No data for that city sorry');
-            }
-        } 
+        let searchCheck = data.find(city => city.city_name.toLowerCase() === searchQuery.toLowerCase());
+        
+        if (searchCheck) {
+            let weatherForecast = searchCheck.data.map(date => new Forecast(date));
 
+            response.status(200).send(weatherForecast);
+        } else {
+            response.status(404).send('No information on that city');
+        }
+        
     } catch (error) {
-        next(error)
-    }
-
+        response.status(500).send(error.message);
+        next(error);
+    } 
 });
 
+class Forecast {
+    constructor(cityObj) {
+        this.date = cityObj.valid_date;
+        this.description = cityObj.weather.description;
+    }
+}
 
 app.get('*',(request, response) => {
     response.status(404).send('Sorry, page not found.');
