@@ -3,7 +3,8 @@
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
-let data = require('./data/weather.json')
+let data = require('./data/weather.json');
+const WEATHER_API_KEY = '3c2b11e96b204a6dbc16ce459fca4715';
 
 const app = express();
 
@@ -20,12 +21,13 @@ app.get('/', (request, response) => {
 });
 
 
-app.get('/weather', (request, response, next) => {
+app.get('/weather', async (request, response, next) => {
     console.log.apply(request.query);
     try {
         let lat = request.query.lat;
         let lon = request.query.lon;
         let searchQuery = request.query.searchQuery;
+        let weatherURL = 'http://api.weatherbit.io/v2.0/forecast/daily?key={WEATHER_API_KEY}'
 
         let searchCheck = data.find(city => city.city_name.toLowerCase() === searchQuery.toLowerCase());
         
