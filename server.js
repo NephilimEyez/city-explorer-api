@@ -6,7 +6,8 @@ const cors = require('cors');
 let data = require('./data/weather.json');
 const axios = require('axios');
 
-const getWeather = require('./modules/weather')
+const getWeather = require('./modules/weather');
+const getMovies = require ('./modules/movies');
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.get('/', (request, response) => {
 
 
 app.get('/weather', getWeather);
+
+app.get('/movie', getMovies); 
 
 
 
